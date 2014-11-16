@@ -1,0 +1,37 @@
+assert(getprop("ro.product.device") == "D5503" || getprop("ro.build.product") == "D5503" ||
+	getprop("ro.product.device") == "amami" || getprop("ro.build.product") == "amami" ||
+	abort("This Package Is For Device: D5503,amami; This Device Is " + getprop("ro.product.device") + "."););
+ui_print(" ");
+ui_print("Welcome to GreatDevs Kernel");
+ui_print(" Device: Xperia Z1 Compact");
+ui_print(" ");
+ui_print("Copying tools & setting perms...");
+package_extract_dir("GD", "/tmp");
+set_perm(0, 0, 0777, "/tmp/dd");
+set_perm(0, 0, 0777, "/tmp/mkbootimg.sh");
+set_perm(0, 0, 0777, "/tmp/mkbootimg");
+set_perm(0, 0, 0777, "/tmp/modify-ramdisk.sh");
+set_perm(0, 0, 0777, "/tmp/unpackbootimg");
+ui_print(" ");
+ui_print("Unpacking Kernel Files...");
+run_program("/tmp/dd", "if=/dev/block/platform/msm_sdcc.1/by-name/boot", "of=/tmp/boot.img");
+run_program("/tmp/unpackbootimg", "-i", "/tmp/boot.img", "-o", "/tmp/");
+ui_print(" ");
+ui_print("Modifying ramdisk...");
+run_program("/tmp/modify-ramdisk.sh");
+ui_print(" ");
+ui_print("Repacking Kernel Files...");
+run_program("/tmp/mkbootimg.sh");
+ui_print(" ");
+ui_print("Flashing Modified Kernel ...");
+run_program("/tmp/dd", "if=/tmp/newboot.img", "of=/dev/block/platform/msm_sdcc.1/by-name/boot");
+ui_print(" ");
+ui_print("Extracting Kernel's modules...");
+run_program("/sbin/mount", "-t", "auto", "/dev/block/platform/msm_sdcc.1/by-name/system", "/system"); 
+package_extract_dir("modules", "/system/lib/modules");
+set_perm_recursive(0, 0, 0755, 0644, "/system/lib/modules");
+set_perm_recursive(0, 0, 0755, 0755, "/system/etc/init.d");
+unmount("/system");
+ui_print(" ");
+ui_print("All Done, Enjoy!!...");
+ui_print(" ");

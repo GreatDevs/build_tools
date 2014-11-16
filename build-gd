@@ -1,0 +1,51 @@
+### This script won't work for you unless you edit the toolchain directory to become as yours.
+### GCC 4.9x
+
+DATE=`date +%Y-%m-%d`
+CYAN="\\033[1;36m"
+GREEN="\\033[1;32m"
+RED="\\033[1;31m"
+RESET="\\e[0m"
+VERSION="1"
+
+set -e
+
+if [ -z "$1" ]
+  then
+    echo -n -e "\n${CYAN}Ether use e.g: (./build-gd amami) or enter (amami/honami/togari) here:${RESET}\n\n"
+    read device
+    DEVICE=${device}
+else
+    DEVICE=$1
+    echo -n -e "\n${GREEN}Building for ${DEVICE}${RESET}\n\n"
+fi
+
+cd ~/Desktop/GreatDevs
+rm -rf toolchain arch/arm/boot/zImage-dtb
+unzip -q ~/toolchain.zip -d toolchain
+ARCH=arm CROSS_COMPILE=toolchain/bin/arm-eabi- make distclean
+export KBUILD_BUILD_USER=GreatDevs
+export KBUILD_BUILD_VERSION=${VERSION}
+ARCH=arm CROSS_COMPILE=toolchain/bin/arm-eabi- make gd_${DEVICE}_defconfig
+ARCH=arm CROSS_COMPILE=toolchain/bin/arm-eabi- make -j16
+if [ -f arch/arm/boot/zImage ]
+then
+cd my_tools
+mv ../arch/arm/boot/zImage GD
+./dtbTool -o GD/dt.img -s 2048 -p ../scripts/dtc/ ../arch/arm/boot/
+mkdir modules
+find .. -name '*.ko' -exec cp {} modules \;
+../toolchain/bin/arm-eabi-strip --strip-unneeded modules/*
+zip -r K META-INF modules GD -x "META-INF/device-specific/*"
+cd META-INF/device-specific/${DEVICE}
+zip -ru ../../../K.zip META-INF
+cd ../../..
+java -Xmx1024m -jar signapk.jar -w META-INF/com/android/otacert testkey.pk8 K.zip ~/Desktop/GreatDevs-Kernel-V${VERSION}_${DATE}_${DEVICE}.zip
+rm -rf K.zip GD/zImage GD/dt.img modules
+cd ..
+ARCH=arm CROSS_COMPILE=toolchain/bin/arm-eabi- make distclean
+rm -rf toolchain arch/arm/boot/zImage-dtb
+echo -e "\n\n${GREEN}DONE!\n\n\nGreatDevs Kernel V${VERSION} Build ${DATE} For ${DEVICE} Is Ready ^_^${RESET}\n\n"
+else 
+echo -e "\n\n${RED}Failed To build GreatDevs Kernel V${VERSION} For ${DEVICE}!!!!${RESET}\n\n"
+fi
