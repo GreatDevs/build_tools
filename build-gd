@@ -37,10 +37,10 @@ mv ../${GD}/arch/arm/boot/zImage ${GD}
 mkdir modules
 find ../${GD} -name '*.ko' -exec cp {} modules \;
 ../${GD}/toolchain/bin/arm-eabi-strip --strip-unneeded modules/*
-zip -r ${GD} META-INF modules ${GD} -x "META-INF/device-specific/*"
-cd META-INF/device-specific/${DEVICE}
-zip -ru ../../../${GD}.zip META-INF
-cd ../../..
+zip -r ${GD} META-INF modules ${GD}
+cd ${DEVICE}
+zip -ru ../${GD}.zip ./*
+cd ..
 java -Xmx1024m -jar signapk.jar -w META-INF/com/android/otacert testkey.pk8 ${GD}.zip ~/Desktop/${GD}-Kernel-V${VERSION}_${DATE}_${DEVICE}.zip
 rm -rf ${GD}.zip ${GD}/zImage ${GD}/dt.img modules
 cd ../${GD}
