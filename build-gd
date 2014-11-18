@@ -7,6 +7,7 @@ GREEN="\\033[1;32m"
 RED="\\033[1;31m"
 RESET="\\e[0m"
 VERSION="1"
+GD="GreatDevs"
 
 set -e
 
@@ -20,32 +21,32 @@ else
     echo -n -e "\n${GREEN}Building for ${DEVICE}${RESET}\n\n"
 fi
 
-cd ~/Desktop/GreatDevs
+cd ~/Desktop/${GD}
 rm -rf toolchain arch/arm/boot/zImage-dtb
 unzip -q ~/toolchain.zip -d toolchain
 ARCH=arm CROSS_COMPILE=toolchain/bin/arm-eabi- make distclean
-export KBUILD_BUILD_USER=GreatDevs
+export KBUILD_BUILD_USER=${GD}
 export KBUILD_BUILD_VERSION=${VERSION}
 ARCH=arm CROSS_COMPILE=toolchain/bin/arm-eabi- make gd_${DEVICE}_defconfig
 ARCH=arm CROSS_COMPILE=toolchain/bin/arm-eabi- make -j16
 if [ -f arch/arm/boot/zImage ]
 then
-cd my_tools
-mv ../arch/arm/boot/zImage GD
-./dtbTool -o GD/dt.img -s 2048 -p ../scripts/dtc/ ../arch/arm/boot/
+cd ../my_tools
+mv ../${GD}/arch/arm/boot/zImage GD
+./dtbTool -o GD/dt.img -s 2048 -p ../${GD}/scripts/dtc/ ../${GD}/arch/arm/boot/
 mkdir modules
-find .. -name '*.ko' -exec cp {} modules \;
-../toolchain/bin/arm-eabi-strip --strip-unneeded modules/*
+find ../${GD} -name '*.ko' -exec cp {} modules \;
+../${GD}/toolchain/bin/arm-eabi-strip --strip-unneeded modules/*
 zip -r K META-INF modules GD -x "META-INF/device-specific/*"
 cd META-INF/device-specific/${DEVICE}
 zip -ru ../../../K.zip META-INF
 cd ../../..
-java -Xmx1024m -jar signapk.jar -w META-INF/com/android/otacert testkey.pk8 K.zip ~/Desktop/GreatDevs-Kernel-V${VERSION}_${DATE}_${DEVICE}.zip
+java -Xmx1024m -jar signapk.jar -w META-INF/com/android/otacert testkey.pk8 K.zip ~/Desktop/${GD}-Kernel-V${VERSION}_${DATE}_${DEVICE}.zip
 rm -rf K.zip GD/zImage GD/dt.img modules
-cd ..
+cd ../${GD}
 ARCH=arm CROSS_COMPILE=toolchain/bin/arm-eabi- make distclean
 rm -rf toolchain arch/arm/boot/zImage-dtb
-echo -e "\n\n${GREEN}DONE!\n\n\nGreatDevs Kernel V${VERSION} Build ${DATE} For ${DEVICE} Is Ready ^_^${RESET}\n\n"
+echo -e "\n\n${GREEN}DONE!\n\n\n${GD} Kernel V${VERSION} Build ${DATE} For ${DEVICE} Is Ready ^_^${RESET}\n\n"
 else 
-echo -e "\n\n${RED}Failed To build GreatDevs Kernel V${VERSION} For ${DEVICE}!!!!${RESET}\n\n"
+echo -e "\n\n${RED}Failed To build ${GD} Kernel V${VERSION} For ${DEVICE}!!!!${RESET}\n\n"
 fi
