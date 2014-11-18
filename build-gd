@@ -32,17 +32,17 @@ ARCH=arm CROSS_COMPILE=toolchain/bin/arm-eabi- make -j16
 if [ -f arch/arm/boot/zImage ]
 then
 cd ../my_tools
-mv ../${GD}/arch/arm/boot/zImage GD
-./dtbTool -o GD/dt.img -s 2048 -p ../${GD}/scripts/dtc/ ../${GD}/arch/arm/boot/
+mv ../${GD}/arch/arm/boot/zImage ${GD}
+./dtbTool -o ${GD}/dt.img -s 2048 -p ../${GD}/scripts/dtc/ ../${GD}/arch/arm/boot/
 mkdir modules
 find ../${GD} -name '*.ko' -exec cp {} modules \;
 ../${GD}/toolchain/bin/arm-eabi-strip --strip-unneeded modules/*
-zip -r K META-INF modules GD -x "META-INF/device-specific/*"
+zip -r ${GD} META-INF modules ${GD} -x "META-INF/device-specific/*"
 cd META-INF/device-specific/${DEVICE}
-zip -ru ../../../K.zip META-INF
+zip -ru ../../../${GD}.zip META-INF
 cd ../../..
-java -Xmx1024m -jar signapk.jar -w META-INF/com/android/otacert testkey.pk8 K.zip ~/Desktop/${GD}-Kernel-V${VERSION}_${DATE}_${DEVICE}.zip
-rm -rf K.zip GD/zImage GD/dt.img modules
+java -Xmx1024m -jar signapk.jar -w META-INF/com/android/otacert testkey.pk8 ${GD}.zip ~/Desktop/${GD}-Kernel-V${VERSION}_${DATE}_${DEVICE}.zip
+rm -rf ${GD}.zip ${GD}/zImage ${GD}/dt.img modules
 cd ../${GD}
 ARCH=arm CROSS_COMPILE=toolchain/bin/arm-eabi- make distclean
 rm -rf toolchain arch/arm/boot/zImage-dtb
