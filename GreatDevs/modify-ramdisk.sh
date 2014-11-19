@@ -9,6 +9,9 @@ rm ../boot.img-ramdisk.gz
 # changing logo
 cp ../logo.rle .
 
+# replaceing current recovery with twrp recovery
+cp ../ramdisk-recovery.cpio sbin/ramdisk-recovery.cpio
+
 # unpack ramdisk
 mkdir sbin/ramdisk
 cd sbin/ramdisk
