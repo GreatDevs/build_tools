@@ -16,7 +16,7 @@ cp ../ramdisk-recovery.cpio sbin/ramdisk-recovery.cpio
 mkdir sbin/ramdisk
 cd sbin/ramdisk
 cpio -i  < ../ramdisk.cpio
-rm ../boot.img-ramdisk.gz
+rm ../ramdisk.cpio
 
 # edit init.qcom.rc
 sed -i '/start mpdecision/d' init.qcom.rc
@@ -28,6 +28,6 @@ cd ..
 rm -rf ramdisk
 
 cd ..
-find . | cpio -o -H newc | gzip > ../boot.img-ramdisk.gz
+find . | cpio -o -H newc | gzip > ../ramdisk.gz
 
 exit 0
