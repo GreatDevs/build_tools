@@ -44,7 +44,7 @@ cd ../../..
 zip -ru ../${GD}.zip ./* -x "${GD}/sbin/*"
 cd ..
 java -Xmx1024m -jar signapk.jar -w META-INF/com/android/otacert testkey.pk8 ${GD}.zip ~/Desktop/${GD}-Kernel-V${VERSION}_${DATE}_${DEVICE}.zip
-rm -rf ${GD}.zip ${GD}/zImage ${GD}/dt.img modules
+rm -rf ${GD}.zip ${GD}/zImage ${GD}/dt.img modules ${DEVICE}/${GD}/ramdisk-recovery.cpio
 cd ../${GD}
 ARCH=arm CROSS_COMPILE=toolchain/bin/arm-eabi- make distclean
 rm -rf toolchain arch/arm/boot/zImage-dtb

@@ -1,0 +1,29 @@
+### This script won't work for you unless you edit the toolchain directory to become as yours.
+### GCC 4.9x
+
+DATE=`date +%Y-%m-%d`
+GREEN="\\033[1;32m"
+RED="\\033[1;31m"
+RESET="\\e[0m"
+GD="GreatDevs"
+
+cd ~/Desktop/my_tools
+./build-gd amami
+if [ -f ~/Desktop/${GD}-Kernel-V*_${DATE}_amami.zip ]
+then
+./build-gd honami
+if [ -f ~/Desktop/${GD}-Kernel-V*_${DATE}_honami.zip ]
+then
+./build-gd togari
+if [ -f ~/Desktop/${GD}-Kernel-V*_${DATE}_togari.zip ]
+then
+echo -e "\n${GREEN}Everything Went Fine, ${GD} Kernel Is Ready For All Supported Devices :)${RESET}\n\n"
+else
+echo -e "\n${RED}Only togari Is Failing, That's weird!!!!{RESET}\n\n"
+fi
+else
+echo -e "\n${RED}Stop Compiling For togari!!!!{RESET}\n\n"
+fi
+else
+echo -e "\n${RED}Stop Compiling For honami & togari!!!!{RESET}\n\n"
+fi

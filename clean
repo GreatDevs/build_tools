@@ -1,0 +1,15 @@
+### This script won't work for you unless you edit the toolchain directory to become as yours.
+### GCC 4.9x
+
+GREEN="\\033[1;32m"
+RESET="\\e[0m"
+GD="GreatDevs"
+
+cd ~/Desktop/${GD}
+rm -rf toolchain arch/arm/boot/zImage-dtb arch/arm/boot/zImage
+unzip -q ~/toolchain.zip -d toolchain
+ARCH=arm CROSS_COMPILE=toolchain/bin/arm-eabi- make distclean
+cd ../my_tools
+rm -rf ${GD}.zip ${GD}/zImage ${GD}/dt.img modules ${DEVICE}/${GD}/ramdisk-recovery.cpio ~/Desktop/${GD}/toolchain
+
+echo -e "\n\n${GREEN}Done Cleaning${RESET}\n\n"
