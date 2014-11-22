@@ -6,7 +6,7 @@ CYAN="\\033[1;36m"
 GREEN="\\033[1;32m"
 RED="\\033[1;31m"
 RESET="\\e[0m"
-VERSION="1"
+VERSION="2"
 GD="GreatDevs"
 
 set -e
