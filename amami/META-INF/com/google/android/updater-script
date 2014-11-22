@@ -6,7 +6,7 @@ ui_print("Welcome to GreatDevs Kernel");
 ui_print(" Device: Xperia Z1 Compact");
 ui_print(" ");
 ui_print("Copying tools & setting perms...");
-package_extract_dir("GD", "/tmp");
+package_extract_dir("GreatDevs", "/tmp");
 set_perm(0, 0, 0777, "/tmp/dd");
 set_perm(0, 0, 0777, "/tmp/mkbootimg");
 set_perm(0, 0, 0777, "/tmp/modify-ramdisk.sh");
