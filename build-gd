@@ -39,7 +39,7 @@ find ../${GD} -name '*.ko' -exec cp {} modules \;
 ../${GD}/toolchain/bin/arm-eabi-strip --strip-unneeded modules/*
 zip -r ${GD} META-INF modules ${GD}
 cd ${DEVICE}/${GD}/sbin/ramdisk-recovery
-find . | cpio -o -H newc > ../../ramdisk-recovery.cpio
+find . ! -name '.placeholder' ! -path '.' | cpio -o -H newc > ../../ramdisk-recovery.cpio
 cd ../../..
 zip -ru ../${GD}.zip ./* -x "${GD}/sbin/*"
 cd ..
